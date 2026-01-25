@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const disputeController = require("../controllers/disputeController");
+const disputeController = require("../controllers/dispute.Controller");
 
 // Routes mapped to controller functions
 router.get("/", disputeController.getDisputes);

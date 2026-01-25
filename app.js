@@ -31,6 +31,8 @@ const userProfileRoutes = require("./routes/userProfile.routes");
 const authRoutes = require("./routes/auth.routes");
 const adminRoutes = require("./routes/admin.routes");
 const reportRoutes = require("./routes/report.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
+const disputesRoutes = require("./routes/disputes.routes");
 const kycRoutes = require("./routes/kyc.routes");
 const FundingRequest = require("./routes/fundingRequest.routes");
 
@@ -59,8 +61,10 @@ app.use("/api/templates", templateRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/disputes", disputesRoutes);
 app.use("/api/kyc", kycRoutes);
-app.use("/api/admin", protectAdmin, FundingRequest);
+app.use("/api/funding", FundingRequest);
 
 /* =========================
    404 HANDLER

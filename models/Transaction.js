@@ -15,7 +15,15 @@ const TransactionSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["Transfer", "Deposit", "Withdrawal"],
+      enum: [
+        "Transfer",
+        "Deposit",
+        "Withdrawal",
+        "credit",
+        "debit",
+        "freeze",
+        "unfreeze",
+      ],
       required: true,
     },
     amount: { type: Number, required: true },
@@ -27,18 +35,9 @@ const TransactionSchema = new mongoose.Schema(
     },
     timestamp: { type: Date, default: Date.now },
     notes: { type: String },
-
-    type: {
-      type: String,
-      enum: ["credit", "debit", "freeze", "unfreeze"],
-      required: true,
-    },
-
-    amount: Number,
     balanceAfter: Number,
-    note: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Transaction", TransactionSchema);

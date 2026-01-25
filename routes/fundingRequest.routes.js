@@ -11,7 +11,7 @@ const {
   reviewFundingRequest,
 } = controllers;
 
-const { protect, adminOnly } = middleware;
+const { protect, adminOrSuperAdmin } = middleware;
 
 /**
  * USER ROUTES
@@ -22,7 +22,7 @@ router.get("/funding-request/me", protect, getMyFundingRequests);
 /**
  * ADMIN ROUTES
  */
-router.get("/funding-request", protect, adminOnly, getAllFundingRequests);
-router.put("/funding-request/:id", protect, adminOnly, reviewFundingRequest);
+router.get("/funding-request", protect, adminOrSuperAdmin, getAllFundingRequests);
+router.put("/funding-request/:id", protect, adminOrSuperAdmin, reviewFundingRequest);
 
 module.exports = router;

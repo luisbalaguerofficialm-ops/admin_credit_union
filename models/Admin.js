@@ -8,11 +8,14 @@ const AdminSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["SuperAdmin", "Admin"],
+      enum: ["SuperAdmin", "Admin", "Staff"],
       default: "Admin",
     },
+    avatar: {
+      type: String,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Admin", AdminSchema);

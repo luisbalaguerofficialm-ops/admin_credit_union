@@ -15,27 +15,24 @@ exports.protect = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attach user to request
+    // Attach safe user payload
     req.user = decoded;
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
 /* =========================
    ADMIN OR SUPER ADMIN
-   (USE THIS AS protectAdmin)
 ========================= */
-exports.protectAdmin = (req, res, next) => {
+exports.adminOrSuperAdmin = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
-  const role = req.user.role;
-
-  if (role !== "Admin" && role !== "SuperAdmin") {
+  if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
     return res.status(403).json({ message: "Admin access only" });
   }
 

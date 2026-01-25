@@ -24,7 +24,7 @@ exports.getChats = async (req, res) => {
 ========================= */
 exports.getChatMessages = async (req, res) => {
   try {
-    const chat = await Chat.findById(req.params.id);
+    const chat = await Chat.findById(req.params.chatId);
     if (!chat) return res.status(404).json({ message: "Chat not found" });
 
     res.json(chat.messages);

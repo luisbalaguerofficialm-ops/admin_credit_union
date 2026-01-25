@@ -70,20 +70,34 @@ exports.updateKycStatus = async (req, res) => {
 
     // 📧 SEND EMAIL
     if (kyc.user.email) {
-      if (status === "approved") {
-        await sendEmail({
-          to: kyc.user.email,
-          subject: "KYC Approved",
-          html: kycApproved(kyc.user.firstName),
-        });
-      }
+      const appName = process.env.APP_NAME || "Credixa";
 
-      if (status === "rejected") {
-        await sendEmail({
-          to: kyc.user.email,
-          subject: "KYC Rejected",
-          html: kycRejected(kyc.user.firstName, adminNote),
-        });
+      try {
+        if (status === "approved") {
+          await sendEmail({
+            to: kyc.user.email,
+            subject: `✅ Your ${appName} KYC Verification Has Been Approved!`,
+            html: kycApproved(
+              kyc.user.fullName || kyc.user.firstName || "User",
+              appName,
+            ),
+          });
+        }
+
+        if (status === "rejected") {
+          await sendEmail({
+            to: kyc.user.email,
+            subject: `⚠️ Your ${appName} KYC Verification Status Update`,
+            html: kycRejected(
+              kyc.user.fullName || kyc.user.firstName || "User",
+              adminNote,
+              appName,
+            ),
+          });
+        }
+      } catch (emailError) {
+        console.error("KYC email sending error:", emailError);
+        // Don't fail the KYC update if email fails
       }
     }
 

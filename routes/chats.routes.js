@@ -3,6 +3,11 @@ const router = express.Router();
 const chatController = require("../controllers/chat.Controller");
 
 // -------------------------
+// CREATE NEW CHAT (USER STARTS)
+// -------------------------
+router.post("/", chatController.createChat);
+
+// -------------------------
 // GET ALL CHATS
 // Optional query: ?status=Active&search=John
 // -------------------------
@@ -19,19 +24,14 @@ router.get("/:chatId/messages", chatController.getChatMessages);
 router.post("/:chatId/messages", chatController.sendMessage);
 
 // -------------------------
-// UPDATE CHAT STATUS OR ASSIGN AGENT
-// -------------------------
-router.put("/:chatId", chatController.updateChat);
-
-// -------------------------
-// CREATE NEW CHAT (USER STARTS)
-// -------------------------
-router.post("/", chatController.createChat);
-
-// -------------------------
 // MARK ALL MESSAGES AS READ
 // -------------------------
 router.post("/:chatId/mark-read", chatController.markMessagesRead);
+
+// -------------------------
+// UPDATE CHAT STATUS OR ASSIGN AGENT
+// -------------------------
+router.put("/:chatId", chatController.updateChat);
 
 // -------------------------
 // DELETE CHAT (ADMIN ONLY, optional)
