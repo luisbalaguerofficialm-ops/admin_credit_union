@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 
 /* =========================
-   AUTHENTICATION
+   BASE AUTH (TOKEN CHECK)
 ========================= */
 exports.protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Not authorized" });
+    return res.status(401).json({ message: "Not authorized, no token" });
   }
 
   const token = authHeader.split(" ")[1];
@@ -15,7 +15,11 @@ exports.protect = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attach safe user payload
+    if (!decoded || !decoded.role) {
+      return res.status(401).json({ message: "Invalid token payload" });
+    }
+
+    // Attach decoded token
     req.user = decoded;
 
     next();
@@ -23,6 +27,12 @@ exports.protect = (req, res, next) => {
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
+
+/* =========================
+   ADMIN AUTH (ALIAS)
+   (prevents undefined middleware bugs)
+========================= */
+exports.protectAdmin = exports.protect;
 
 /* =========================
    ADMIN OR SUPER ADMIN
