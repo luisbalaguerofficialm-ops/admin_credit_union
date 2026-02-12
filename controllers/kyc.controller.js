@@ -13,7 +13,7 @@ const { kycApproved, kycRejected } = require("../utils/kycEmailTemplates");
 exports.getAllKyc = async (req, res) => {
   try {
     const kycs = await Kyc.find()
-      .populate("user", "email firstName lastName kycStatus")
+      .populate("user", "email firstName lastName kycStatus profileImage")
       .sort({ createdAt: -1 });
 
     res.json({
@@ -38,9 +38,13 @@ exports.getAllKyc = async (req, res) => {
 exports.updateKycStatus = async (req, res) => {
   try {
     const { status, adminNote } = req.body;
+    const allowedStatuses = ["pending", "approved", "rejected"];
 
-    if (!["approved", "rejected"].includes(status)) {
-      return res.status(400).json({ message: "Invalid KYC status" });
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid KYC status",
+      });
     }
 
     const kyc = await Kyc.findById(req.params.id).populate("user");
@@ -52,23 +56,51 @@ exports.updateKycStatus = async (req, res) => {
       });
     }
 
+    if (kyc.status === status) {
+      return res.status(400).json({
+        success: false,
+        message: `KYC already ${kyc.status}. No further action allowed.`,
+      });
+    }
+
+    // ✅ Update KYC
     kyc.status = status;
-    kyc.note = adminNote;
-    await kyc.save();
+    kyc.adminNote = adminNote || "";
+    await kyc.save({ validateBeforeSave: false });
 
-    // 🔥 UPDATE USER KYC STATUS (CRITICAL)
-    await User.findByIdAndUpdate(kyc.user._id, {
+    // ==========================================
+    // 🔥 SYNC USER (CRITICAL FIX)
+    // ==========================================
+
+    const updateData = {
       kycStatus: status,
-    });
+    };
 
-    // 📡 REAL-TIME UPDATE → USER
+    // 👉 If approved, set profile image from selfie
+    if (status === "approved") {
+      const selfieDoc = kyc.docs?.find((doc) => doc.name === "Selfie");
+
+      if (selfieDoc?.url) {
+        updateData.profileImage = selfieDoc.url;
+      }
+    }
+
+    await User.findByIdAndUpdate(kyc.user._id, updateData);
+
+    // ==========================================
+    // 📡 REAL-TIME SOCKET UPDATE
+    // ==========================================
     const io = req.app.get("io");
-    io.to(kyc.user._id.toString()).emit("kyc:status", {
-      status,
-      adminNote,
-    });
+    if (io) {
+      io.to(kyc.user._id.toString()).emit("kyc:status", {
+        status,
+        adminNote,
+      });
+    }
 
-    // 📧 SEND EMAIL
+    // ==========================================
+    // 📧 EMAIL NOTIFICATION
+    // ==========================================
     if (kyc.user.email) {
       const appName = process.env.APP_NAME || "Credixa";
 
@@ -97,7 +129,6 @@ exports.updateKycStatus = async (req, res) => {
         }
       } catch (emailError) {
         console.error("KYC email sending error:", emailError);
-        // Don't fail the KYC update if email fails
       }
     }
 

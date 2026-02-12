@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 
 const KycSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     name: { type: String, required: true },
 
     idType: String,
@@ -14,8 +19,8 @@ const KycSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected"],
-      default: "Pending",
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
 
     risk: {
@@ -29,7 +34,7 @@ const KycSchema = new mongoose.Schema(
       default: "None",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Kyc", KycSchema);

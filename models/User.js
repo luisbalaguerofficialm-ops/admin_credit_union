@@ -31,8 +31,8 @@ const userSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     role: {
       type: String,
-      default: "Super Admin",
-      enum: ["Super Admin", "Admin", "Staff"],
+      default: "SuperAdmin",
+      enum: ["SuperAdmin", "Admin", "Staff"],
     },
     email: { type: String, required: true, unique: true },
     phone: { type: String },
