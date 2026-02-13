@@ -12,7 +12,7 @@ const {
   approveFundingRequest,
   rejectFundingRequest,
   getAllUserWallets,
-} = require("../controllers/adminFunding.Controller");
+} = require("../controllers/adminFunding.controller");
 
 // ===============================
 // Funding Requests (Admin Access)

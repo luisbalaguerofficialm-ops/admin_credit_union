@@ -1,4 +1,4 @@
-// admin/controllers/AdminFundingController.js
+// admin/controllers/AdminFunding.controller.js
 
 const AdminWallet = require("../models/AdminWallet");
 const AdminFundingRequest = require("../models/AdminFundingRequest");
