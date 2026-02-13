@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-// Each chat message
+// ------------------------------
+// Message Schema
+// ------------------------------
 const MessageSchema = new mongoose.Schema({
   sender: {
     type: String,
@@ -9,22 +11,26 @@ const MessageSchema = new mongoose.Schema({
   },
   content: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
-  read: { type: Boolean, default: false }, // track if admin/user has read the message
+  read: { type: Boolean, default: false }, // track if admin/user has read
 });
 
-// Main chat thread for a user
+// ------------------------------
+// Chat Schema
+// ------------------------------
 const ChatSchema = new mongoose.Schema(
   {
     user: {
       userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: false,
-      }, // optional, if you have user accounts
-      name: { type: String, required: true },
-      email: { type: String, required: true },
+        required: false, // optional for guest users
+      },
+      name: { type: String, required: true }, // required for validation
+      email: { type: String, required: true }, // required for validation
       online: { type: Boolean, default: true },
     },
+    title: { type: String, required: true }, // optional if you want chats to have titles
+    description: { type: String, required: true }, // optional chat description
     status: {
       type: String,
       enum: ["Active", "Waiting", "Solved"],
@@ -32,9 +38,9 @@ const ChatSchema = new mongoose.Schema(
     },
     assignedTo: { type: String, default: null }, // admin username or id
     lastMessageAt: { type: Date, default: Date.now }, // track last activity
-    messages: [MessageSchema],
+    messages: [MessageSchema], // array of messages
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Chat", ChatSchema);

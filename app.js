@@ -34,7 +34,7 @@ const reportRoutes = require("./routes/report.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const disputesRoutes = require("./routes/disputes.routes");
 const kycRoutes = require("./routes/kyc.routes");
-const fundingRoutes = require("./routes/fundingRequest.routes");
+const adminFundingRoutes = require("./routes/adminFunding.Routes");
 
 /* =========================
    AUTH MIDDLEWARE
@@ -67,14 +67,14 @@ app.use("/api/settings", protectAdmin, settingsRoutes);
 app.use("/api/templates", protectAdmin, templateRoutes);
 app.use("/api/disputes", protectAdmin, disputesRoutes);
 app.use("/api/kyc", protectAdmin, kycRoutes);
-app.use("/api/funding", protectAdmin, fundingRoutes);
 app.use("/api/accounts", protectAdmin, accountRoutes);
 app.use("/api/users", protectAdmin, userRoutes);
 app.use("/api/user-profile", protectAdmin, userProfileRoutes);
 app.use("/api/fees", protectAdmin, feeRoutes);
 app.use("/api/transactions", protectAdmin, transactionRoutes);
 app.use("/api/notifications", protectAdmin, notificationRoutes);
-app.use("/api/chats", protectAdmin, chatRoutes);
+app.use("/api/chat", protectAdmin, chatRoutes);
+app.use("/api/adminfunding", protectAdmin, adminFundingRoutes);
 
 /* =========================
    404 HANDLER

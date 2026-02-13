@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const Wallet = require("../models/Wallet");
+const Wallet = require("../models/AdminWallet");
 const Transaction = require("../models/Transaction");
 const Device = require("../models/Device");
 const AdminNote = require("../models/AdminNote");

@@ -1,3 +1,5 @@
+// admin_credit_backend/controllers/chat.Controller.js
+
 const Chat = require("../models/Chat");
 
 /* =========================
@@ -78,7 +80,6 @@ exports.updateChat = async (req, res) => {
 
     await chat.save();
 
-    // Emit chat update to admin room
     const io = req.app.get("io");
     io.to("admin-room").emit("chat:update", { chatId, status, assignedTo });
 
@@ -93,10 +94,21 @@ exports.updateChat = async (req, res) => {
 ========================= */
 exports.createChat = async (req, res) => {
   try {
-    const { user } = req.body;
+    const { title, description } = req.body;
+
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
     const chat = await Chat.create({
-      user,
+      title,
+      description,
+      user: {
+        userId: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        online: true,
+      },
       messages: [],
       status: "Waiting",
       lastMessageAt: new Date(),
@@ -122,11 +134,9 @@ exports.markMessagesRead = async (req, res) => {
     const chat = await Chat.findById(chatId);
     if (!chat) return res.status(404).json({ message: "Chat not found" });
 
-    chat.messages.forEach((msg) => {
-      msg.read = true;
-    });
-
+    chat.messages.forEach((msg) => (msg.read = true));
     await chat.save();
+
     res.json({ message: "Messages marked as read" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -159,7 +169,6 @@ exports.deleteChat = async (req, res) => {
 
     await Chat.findByIdAndDelete(chatId);
 
-    // Emit event to admin room
     const io = req.app.get("io");
     io.to("admin-room").emit("chat:deleted", { chatId });
 

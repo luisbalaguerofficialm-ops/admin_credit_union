@@ -1,4 +1,4 @@
-const Wallet = require("../models/Wallet");
+const Wallet = require("../models/AdminWallet");
 const Transaction = require("../models/Transaction");
 
 const Account = require("../models/Account");
@@ -31,7 +31,7 @@ exports.updateAccountStatus = async (req, res) => {
     const account = await Account.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }
+      { new: true },
     );
 
     res.json(account);

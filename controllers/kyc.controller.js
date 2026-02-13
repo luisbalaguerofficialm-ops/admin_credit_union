@@ -68,74 +68,25 @@ exports.updateKycStatus = async (req, res) => {
     kyc.adminNote = adminNote || "";
     await kyc.save({ validateBeforeSave: false });
 
-    // ==========================================
-    // 🔥 SYNC USER (CRITICAL FIX)
-    // ==========================================
-
+    // ✅ Sync User
     const updateData = {
       kycStatus: status,
     };
 
-    // 👉 If approved, set profile image from selfie
-    if (status === "approved") {
-      const selfieDoc = kyc.docs?.find((doc) => doc.name === "Selfie");
-
-      if (selfieDoc?.url) {
-        updateData.profileImage = selfieDoc.url;
-      }
+    // Set profile image from selfie
+    if (status === "approved" && kyc.selfie) {
+      updateData.profileImage = kyc.selfie;
     }
 
     await User.findByIdAndUpdate(kyc.user._id, updateData);
 
-    // ==========================================
-    // 📡 REAL-TIME SOCKET UPDATE
-    // ==========================================
-    const io = req.app.get("io");
-    if (io) {
-      io.to(kyc.user._id.toString()).emit("kyc:status", {
-        status,
-        adminNote,
-      });
-    }
-
-    // ==========================================
-    // 📧 EMAIL NOTIFICATION
-    // ==========================================
-    if (kyc.user.email) {
-      const appName = process.env.APP_NAME || "Credixa";
-
-      try {
-        if (status === "approved") {
-          await sendEmail({
-            to: kyc.user.email,
-            subject: `✅ Your ${appName} KYC Verification Has Been Approved!`,
-            html: kycApproved(
-              kyc.user.fullName || kyc.user.firstName || "User",
-              appName,
-            ),
-          });
-        }
-
-        if (status === "rejected") {
-          await sendEmail({
-            to: kyc.user.email,
-            subject: `⚠️ Your ${appName} KYC Verification Status Update`,
-            html: kycRejected(
-              kyc.user.fullName || kyc.user.firstName || "User",
-              adminNote,
-              appName,
-            ),
-          });
-        }
-      } catch (emailError) {
-        console.error("KYC email sending error:", emailError);
-      }
-    }
+    // 🔄 Re-fetch updated record
+    const updatedKyc = await Kyc.findById(req.params.id).populate("user");
 
     res.json({
       success: true,
       message: "KYC status updated successfully",
-      kyc,
+      kyc: updatedKyc,
     });
   } catch (err) {
     console.error("Update KYC error:", err);

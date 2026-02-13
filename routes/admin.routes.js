@@ -6,16 +6,14 @@ const { protect, superAdminOnly } = require("../middlewares/auth.middleware");
 const logActivity = require("../middlewares/activity.middleware");
 const uploadAvatar = require("../middlewares/upload.middleware");
 
-/**
- * ADMIN ACTIVITY LOGS
- * GET /api/admin/activity
- */
+/* =====================================
+   SPECIFIC ROUTES FIRST
+===================================== */
+
+// ADMIN ACTIVITY LOGS
 router.get("/activity", protect, superAdminOnly, controller.getAdminActivity);
 
-/**
- * CREATE ADMIN
- * POST /api/admin/create
- */
+// CREATE ADMIN
 router.post(
   "/create",
   protect,
@@ -24,22 +22,25 @@ router.post(
   controller.createAdmin,
 );
 
-/**
- * GET ALL ADMINS
- * GET /api/admin/all
- */
+// GET ALL ADMINS
 router.get("/all", protect, superAdminOnly, controller.getAdmins);
 
-/**
- * GET ADMIN BY ID
- * GET /api/admin/:id
- */
+// UPDATE CURRENT ADMIN AVATAR
+router.put(
+  "/me/avatar",
+  protect,
+  uploadAvatar.single("avatar"),
+  controller.uploadAvatar,
+);
+
+/* =====================================
+   DYNAMIC ROUTES LAST
+===================================== */
+
+// GET ADMIN BY ID
 router.get("/:id", protect, superAdminOnly, controller.getAdminById);
 
-/**
- * UPDATE ADMIN
- * PUT /api/admin/:id
- */
+// UPDATE ADMIN
 router.put(
   "/:id",
   protect,
@@ -48,23 +49,13 @@ router.put(
   controller.updateAdmin,
 );
 
-/**
- * DELETE ADMIN
- * DELETE /api/admin/:id
- */
+// DELETE ADMIN
 router.delete(
   "/:id",
   protect,
   superAdminOnly,
   logActivity("DELETE_ADMIN"),
   controller.deleteAdmin,
-);
-
-router.put(
-  "/me/avatar",
-  protect,
-  uploadAvatar.single("avatar"),
-  controller.uploadAvatar,
 );
 
 module.exports = router;

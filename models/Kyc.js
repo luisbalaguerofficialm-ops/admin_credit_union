@@ -6,16 +6,21 @@ const KycSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
 
-    name: { type: String, required: true },
+    country: { type: String, required: true },
 
-    idType: String,
-    idNumber: String,
+    idType: {
+      type: String,
+      enum: ["passport", "drivers_license", "national_id"],
+      required: true,
+    },
+    idNumber: { type: String, required: true },
 
-    idFront: String,
-    idBack: String,
-    selfie: String,
+    idFront: { type: String, required: true },
+    idBack: { type: String, required: true },
+    selfie: { type: String, required: true },
 
     status: {
       type: String,
@@ -33,6 +38,21 @@ const KycSchema = new mongoose.Schema(
       type: String,
       default: "None",
     },
+
+    docs: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        url: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+
+    note: String,
   },
   { timestamps: true },
 );

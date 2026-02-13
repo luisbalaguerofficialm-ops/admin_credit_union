@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const FeeTierSchema = new mongoose.Schema({
+  min: {
+    type: Number,
+    required: true,
+  },
+  max: {
+    type: Number,
+    required: true,
+  },
+  fee: {
+    type: Number,
+    required: true,
+  },
+});
+
 const FeeRuleSchema = new mongoose.Schema(
   {
     ruleName: {
@@ -16,24 +31,11 @@ const FeeRuleSchema = new mongoose.Schema(
 
     structure: {
       type: String,
-      enum: ["Fixed", "Percentage", "Hybrid"],
+      enum: ["Tiered", "Fixed", "Percentage"],
       required: true,
     },
 
-    amount: {
-      type: String, // supports ₦50, 1.5%, ₦100 + 0.5%
-      required: true,
-    },
-
-    minLimit: {
-      type: Number,
-      required: true,
-    },
-
-    maxLimit: {
-      type: Number,
-      required: true,
-    },
+    tiers: [FeeTierSchema], // 🔥 This handles your ranges
 
     status: {
       type: String,
@@ -41,7 +43,7 @@ const FeeRuleSchema = new mongoose.Schema(
       default: "Active",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("FeeRule", FeeRuleSchema);

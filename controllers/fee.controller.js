@@ -6,39 +6,42 @@ const FeeRule = require("../models/FeeRule");
  */
 exports.createFeeRule = async (req, res) => {
   try {
-    const { ruleName, type, structure, amount, minLimit, maxLimit, status } =
-      req.body;
+    const { ruleName, type, structure, tiers, status } = req.body;
 
     // Basic validation
-    if (
-      !ruleName ||
-      !type ||
-      !structure ||
-      !amount ||
-      minLimit === undefined ||
-      maxLimit === undefined
-    ) {
+    if (!ruleName || !type || !structure || !tiers || !Array.isArray(tiers)) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required",
+        message: "All fields are required and tiers must be an array",
       });
     }
 
-    if (Number(minLimit) > Number(maxLimit)) {
-      return res.status(400).json({
-        success: false,
-        message: "Min limit cannot be greater than max limit",
-      });
+    // Validate tiers
+    for (const tier of tiers) {
+      if (
+        tier.min === undefined ||
+        tier.max === undefined ||
+        tier.fee === undefined
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Each tier must have min, max, and fee",
+        });
+      }
+      if (tier.min > tier.max) {
+        return res.status(400).json({
+          success: false,
+          message: "Tier min cannot be greater than max",
+        });
+      }
     }
 
     const feeRule = await FeeRule.create({
       ruleName,
       type,
       structure,
-      amount,
-      minLimit,
-      maxLimit,
-      status,
+      tiers,
+      status: status || "Active",
     });
 
     return res.status(201).json({
@@ -82,9 +85,35 @@ exports.getFeeRules = async (req, res) => {
  */
 exports.updateFeeRule = async (req, res) => {
   try {
-    const fee = await FeeRule.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const { ruleName, type, structure, tiers, status } = req.body;
+
+    // Validate tiers if present
+    if (tiers && Array.isArray(tiers)) {
+      for (const tier of tiers) {
+        if (
+          tier.min === undefined ||
+          tier.max === undefined ||
+          tier.fee === undefined
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "Each tier must have min, max, and fee",
+          });
+        }
+        if (tier.min > tier.max) {
+          return res.status(400).json({
+            success: false,
+            message: "Tier min cannot be greater than max",
+          });
+        }
+      }
+    }
+
+    const fee = await FeeRule.findByIdAndUpdate(
+      req.params.id,
+      { ruleName, type, structure, tiers, status },
+      { new: true },
+    );
 
     if (!fee) {
       return res.status(404).json({
@@ -99,6 +128,7 @@ exports.updateFeeRule = async (req, res) => {
       data: fee,
     });
   } catch (error) {
+    console.error("Update Fee Rule Error:", error);
     res.status(500).json({
       success: false,
       message: "Server error",
@@ -115,7 +145,7 @@ exports.disableFeeRule = async (req, res) => {
     const fee = await FeeRule.findByIdAndUpdate(
       req.params.id,
       { status: "Disabled" },
-      { new: true }
+      { new: true },
     );
 
     if (!fee) {
@@ -131,6 +161,7 @@ exports.disableFeeRule = async (req, res) => {
       data: fee,
     });
   } catch (error) {
+    console.error("Disable Fee Rule Error:", error);
     res.status(500).json({
       success: false,
       message: "Server error",

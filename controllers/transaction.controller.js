@@ -53,7 +53,7 @@ exports.getRecentTransactions = async (req, res) => {
   try {
     const transactions = await Transaction.find()
       .sort({ createdAt: -1 })
-      .limit(9);
+      .limit(15);
 
     res.json(transactions);
   } catch (err) {

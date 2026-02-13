@@ -22,10 +22,20 @@ const PublicKycSchema = new mongoose.Schema(
       trim: true,
     },
 
+    idType: {
+      type: String,
+      enum: ["passport", "drivers_license", "national_id"],
+      required: true,
+    },
+
+    idFront: { type: String, required: true },
+    idBack: { type: String, required: true },
+    selfie: { type: String, required: true },
+
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected"],
-      default: "Pending",
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
 
     country: {
