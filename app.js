@@ -34,7 +34,8 @@ const reportRoutes = require("./routes/report.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const disputesRoutes = require("./routes/disputes.routes");
 const kycRoutes = require("./routes/kyc.routes");
-const adminFundingRoutes = require("./routes/adminFunding.Routes");
+const adminFundingRoutes = require("./routes/adminfunding.routes");
+
 
 /* =========================
    AUTH MIDDLEWARE
