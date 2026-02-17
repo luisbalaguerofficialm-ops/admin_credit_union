@@ -5,14 +5,14 @@ const {
   protect,
   adminOnly,
   adminOrSuperAdmin, // admin-only access middleware
-} = require("../middlewares/auth.middleware");
+} = require("../middlewares/authMiddleware");
 
 const {
   getAllFundingRequests,
   approveFundingRequest,
   rejectFundingRequest,
   getAllUserWallets,
-} = require("../controllers/adminFunding.controller");
+} = require("../controllers/adminFundingController");
 
 // ===============================
 // Funding Requests (Admin Access)

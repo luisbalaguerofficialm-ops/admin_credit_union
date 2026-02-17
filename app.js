@@ -18,24 +18,22 @@ app.use(express.json());
 /* =========================
    IMPORT ROUTES
 ========================= */
-const accountRoutes = require("./routes/account.routes");
-const feeRoutes = require("./routes/fee.routes");
-const roleRoutes = require("./routes/roles.routes");
-const transactionRoutes = require("./routes/transactions.routes");
-const userRoutes = require("./routes/users.routes");
-const notificationRoutes = require("./routes/notifications.routes");
-const templateRoutes = require("./routes/templates.routes");
-const chatRoutes = require("./routes/chats.routes");
-const settingsRoutes = require("./routes/settings.routes");
-const userProfileRoutes = require("./routes/userProfile.routes");
-const authRoutes = require("./routes/auth.routes");
-const adminRoutes = require("./routes/admin.routes");
-const reportRoutes = require("./routes/report.routes");
-const dashboardRoutes = require("./routes/dashboard.routes");
-const disputesRoutes = require("./routes/disputes.routes");
-const kycRoutes = require("./routes/kyc.routes");
-const adminFundingRoutes = require("./routes/adminfunding.routes");
-
+const accountRoute = require("./routes/accountRoute");
+const rolesRoute = require("./routes/rolesRoute");
+const transactionRoute = require("./routes/transactionsRoute");
+const userRoute = require("./routes/usersRoute");
+const notificationRoute = require("./routes/notificationRoute");
+const chatsRoute = require("./routes/chatsRoute");
+const settingsRoute = require("./routes/settingsRoute");
+const userProfileRoute = require("./routes/userProfileRoute");
+const authRoute = require("./routes/authRoute");
+const adminRoute = require("./routes/adminRoute");
+const reportRoute = require("./routes/reportRoute");
+const dashboardRoute = require("./routes/dashboardRoute");
+const disputesRoute = require("./routes/disputesRoute");
+const kycRoute = require("./routes/kycRoute");
+const adminFundingRoute = require("./routes/adminFundingRoute");
+const feeRoute = require("./routes/feeRoute");
 
 /* =========================
    AUTH MIDDLEWARE
@@ -43,7 +41,7 @@ const adminFundingRoutes = require("./routes/adminfunding.routes");
 const {
   protectAdmin,
   superAdminOnly,
-} = require("./middlewares/auth.middleware");
+} = require("./middlewares/authMiddleware");
 
 /* =========================
    PUBLIC ROUTE
@@ -55,27 +53,26 @@ app.get("/", (req, res) => {
 /* =========================
    AUTH ROUTES (PUBLIC)
 ========================= */
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoute);
 
 /* =========================
    ADMIN / PROTECTED ROUTES
 ========================= */
-app.use("/api/admin", protectAdmin, superAdminOnly, adminRoutes);
-app.use("/api/dashboard", protectAdmin, dashboardRoutes);
-app.use("/api/reports", protectAdmin, reportRoutes);
-app.use("/api/roles", protectAdmin, superAdminOnly, roleRoutes);
-app.use("/api/settings", protectAdmin, settingsRoutes);
-app.use("/api/templates", protectAdmin, templateRoutes);
-app.use("/api/disputes", protectAdmin, disputesRoutes);
-app.use("/api/kyc", protectAdmin, kycRoutes);
-app.use("/api/accounts", protectAdmin, accountRoutes);
-app.use("/api/users", protectAdmin, userRoutes);
-app.use("/api/user-profile", protectAdmin, userProfileRoutes);
-app.use("/api/fees", protectAdmin, feeRoutes);
-app.use("/api/transactions", protectAdmin, transactionRoutes);
-app.use("/api/notifications", protectAdmin, notificationRoutes);
-app.use("/api/chat", protectAdmin, chatRoutes);
-app.use("/api/adminfunding", protectAdmin, adminFundingRoutes);
+app.use("/api/admin", protectAdmin, superAdminOnly, adminRoute);
+app.use("/api/dashboard", protectAdmin, dashboardRoute);
+app.use("/api/reports", protectAdmin, reportRoute);
+app.use("/api/roles", protectAdmin, superAdminOnly, rolesRoute);
+app.use("/api/settings", protectAdmin, settingsRoute);
+app.use("/api/disputes", protectAdmin, disputesRoute);
+app.use("/api/kyc", protectAdmin, kycRoute);
+app.use("/api/accounts", protectAdmin, accountRoute);
+app.use("/api/users", protectAdmin, userRoute);
+app.use("/api/user-profile", protectAdmin, userProfileRoute);
+app.use("/api/fees", protectAdmin, feeRoute);
+app.use("/api/transactions", protectAdmin, transactionRoute);
+app.use("/api/notifications", protectAdmin, notificationRoute);
+app.use("/api/chat", protectAdmin, chatsRoute);
+app.use("/api/adminfunding", protectAdmin, adminFundingRoute);
 
 /* =========================
    404 HANDLER

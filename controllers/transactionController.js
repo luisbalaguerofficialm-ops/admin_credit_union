@@ -1,5 +1,5 @@
 const Transaction = require("../models/Transaction");
-const dashboardController = require("./dashboard.controller");
+const dashboardController = require("./dashboardController");
 
 /* =====================================================
    TRANSACTION CHART (READ ONLY)

@@ -1,5 +1,5 @@
 const Notification = require("../models/Notification");
-const dashboardController = require("./dashboard.controller"); // imported for dashboard refresh
+const dashboardController = require("./dashboardController"); // imported for dashboard refresh
 
 /* =========================
    SEND NOTIFICATION

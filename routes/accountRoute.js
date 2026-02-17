@@ -5,13 +5,13 @@ const {
   getAllAccounts,
   getAccountById,
   updateAccountStatus,
-} = require("../controllers/account.controller");
+} = require("../controllers/accountController");
 
-const { adjustBalance } = require("../controllers/balance.controller");
+const { adjustBalance } = require("../controllers/balanceController");
 
 const {
   setTransactionLimit,
-} = require("../controllers/transactionLimit.controller");
+} = require("../controllers/transactionLimitController");
 
 // ACCOUNT MANAGEMENT
 router.get("/", getAllAccounts);

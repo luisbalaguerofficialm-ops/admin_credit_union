@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const kycController = require("../controllers/kyc.controller");
+const kycController = require("../controllers/kycController");
 const {
   protect,
   adminOrSuperAdmin,
   superAdminOnly,
-} = require("../middlewares/auth.middleware");
+} = require("../middlewares/authMiddleware");
 
 /* =========================
    KYC ROUTES

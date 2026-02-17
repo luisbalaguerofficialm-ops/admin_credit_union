@@ -5,7 +5,7 @@ const {
   getFeeRules,
   updateFeeRule,
   disableFeeRule,
-} = require("../controllers/fee.controller");
+} = require("../controllers/feeController");
 
 // Create fee rule
 router.post("/", createFeeRule);

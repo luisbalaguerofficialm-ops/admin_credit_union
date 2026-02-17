@@ -32,7 +32,7 @@ exports.getDashboardStats = async (req, res) => {
 
     const totalBalance = accounts.reduce(
       (sum, acc) => sum + (acc.totalBalance || 0),
-      0
+      0,
     );
 
     res.json({
@@ -82,7 +82,7 @@ exports.emitDashboardUpdate = async (req) => {
 
     const totalBalance = accounts.reduce(
       (sum, acc) => sum + (acc.totalBalance || 0),
-      0
+      0,
     );
 
     /* Emit real-time dashboard update to all connected clients */

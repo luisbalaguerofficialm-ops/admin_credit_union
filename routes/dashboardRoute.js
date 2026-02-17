@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { getDashboardStats } = require("../controllers/dashboard.controller");
+const { getDashboardStats } = require("../controllers/dashboardController");
 
 const {
   getTransactionChart,
   getRecentTransactions,
-} = require("../controllers/transaction.controller");
+} = require("../controllers/transactionController");
 
-const { getRecentActivities } = require("../controllers/activity.controller");
+const { getRecentActivities } = require("../controllers/activityController");
 
 router.get("/stats", getDashboardStats);
 router.get("/transactions/chart", getTransactionChart);

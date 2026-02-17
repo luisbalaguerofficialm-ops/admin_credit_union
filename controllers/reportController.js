@@ -101,7 +101,7 @@ exports.getUserActivityReport = async (req, res) => {
       name: u._id,
       login: Math.floor(Math.random() * 500), // replace with login logs
       newUser: u.newUser,
-    }))
+    })),
   );
 };
 

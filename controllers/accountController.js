@@ -101,3 +101,20 @@ exports.unfreezeAccount = async (req, res) => {
 /**
  * POST /api/accounts/:id/adjust
  */
+exports.adjustAccountBalance = async (req, res) => {
+  const { amount } = req.body;
+  const wallet = await Wallet.findById(req.params.id);
+  if (!wallet) return res.status(404).json({ message: "Wallet not found" });
+
+  wallet.totalBalance += amount;
+  wallet.availableBalance += amount;
+  await wallet.save();
+
+  await Transaction.create({
+    wallet: wallet._id,
+    type: "adjust",
+    balanceAfter: wallet.totalBalance,
+  });
+
+  res.json({ message: "Wallet balance adjusted", wallet });
+};

@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const controller = require("../controllers/admin.controller");
-const { protect, superAdminOnly } = require("../middlewares/auth.middleware");
-const logActivity = require("../middlewares/activity.middleware");
-const uploadAvatar = require("../middlewares/upload.middleware");
+const controller = require("../controllers/adminController");
+const { protect, superAdminOnly } = require("../middlewares/authMiddleware");
+const logActivity = require("../middlewares/activityMiddleware");
+const uploadAvatar = require("../middlewares/uploadMiddleware");
 
 /* =====================================
    SPECIFIC ROUTES FIRST

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controllers/userProfile.controller");
+const controller = require("../controllers/userProfileController");
 
 router.get("/:id/profile", controller.getUserProfile);
 router.get("/:id/wallet", controller.getUserWallet);
